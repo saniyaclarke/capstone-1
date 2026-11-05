@@ -7,153 +7,51 @@ import java.util.Scanner;
 import java.util.regex.Pattern;
 
 public class PennyTrackApplication {
+    public static Scanner input = new Scanner(System.in);
+    public static ArrayList<Transaction> transactionsList = loadFile();
+
     public static void main(String[] args) {
-        ArrayList<Transaction> transactions = loadFile();
 
-        Scanner input = new Scanner(System.in);
-
-        mainMenu(transactions, input);
+        mainMenu();
 
     }
 
-
-    public static void mainMenu(ArrayList<Transaction> transactionList, Scanner input) {
+    public static void mainMenu() {
         String option;
 
-        System.out.println(""" 
-                D) Add Deposit
-                
-                P) Make Payment (Debit)
-                
-                L) Ledger
-                
-                X)Exit
-                
-                Please enter option :
-                """);
-        option = input.nextLine().trim().toUpperCase();
 
-        while (!option.equals("X")) {
+        do {
+            System.out.println(""" 
+                    D) Add Deposit
+                    
+                    P) Make Payment (Debit)
+                    
+                    L) Ledger
+                    
+                    X)Exit
+                    
+                    Please enter option :
+                    """);
+            option = input.nextLine().trim().toUpperCase();
+
             switch (option) {
 
                 case "D":
-                    System.out.println("Selection: Add deposit");
-
-                    System.out.println("Please enter the following: ");
-
-                    System.out.println("Description: ");
-                    String description = input.nextLine();
-
-                    System.out.println("Vendor: ");
-                    String vendor = input.nextLine();
-
-                    System.out.println("Amount: ");
-                    String amount = input.nextLine();
-                    double cost = Double.parseDouble(amount);
-                    cost = Math.abs(cost);
-
-                    LocalDateTime now = LocalDateTime.now();
-
-                    //converts local date and time into a string type
-                    String date = now.toLocalDate().toString();
-                    String time = now.toLocalTime().toString();
-
-                    //Now we have to create the Transaction (created new object)
-                    Transaction transaction = new Transaction(date, time, description, vendor, cost);
-
-                    //Now we have to store the new object
-                    transactionList.add(transaction);
-
-                    saveTransaction(transaction);
+                    addDeposit();
                     break;
 
-
                 case "P":
-                    System.out.println("Selection: Make Payment (Debit) ");
+                    addPayment();
 
-                    System.out.println("Please enter the following: ");
-
-                    System.out.println("Description: ");
-                    String debitDescription = input.nextLine();
-
-                    System.out.println("Vendor: ");
-                    String debitVendor = input.nextLine();
-
-                    System.out.println("Amount: ");
-                    String debitAmount = input.nextLine();
-                    double debitCost = Double.parseDouble(debitAmount);
-                    debitCost = -Math.abs(debitCost);
-
-                    LocalDateTime debitNow = LocalDateTime.now();
-
-                    //converts local date and time into a string type
-                    String debitDate = debitNow.toLocalDate().toString();
-                    String debitTime = debitNow.toLocalTime().toString();
-
-                    //Now we have to create the Transaction (created new object)
-                    Transaction debitTransaction = new Transaction(debitDate, debitTime, debitDescription, debitVendor, debitCost);
-
-                    //Now we have to store the new object
-                    transactionList.add(debitTransaction);
-
-                    saveTransaction(debitTransaction);
                     break;
 
                 case "L":
-                    System.out.println("Selection: Ledger");
-
-                    System.out.println(""" 
-                            A) All
-                            
-                            D) Deposits
-                            
-                            P) Payments
-                            
-                            R) Reports
-                            
-                            Please enter choice :
-                            """);
-
-                    String ledgerOption = input.nextLine().trim().toUpperCase();
-
-                    switch (ledgerOption) {
-                        case "A":
-                            for (Transaction transactions : transactionList) {
-                                System.out.println(transactions);
-
-                            }
-                            break;
-
-                        case "D":
-                            for (Transaction transactions : transactionList) {
-                                if (transactions.getAmount() > 0) {
-                                    System.out.println(transactions);
-                                }
-                            }
-                            break;
-
-
-                        case "P":
-                            for (Transaction transactions : transactionList) {
-                                if (transactions.getAmount() < 0) {
-                                    System.out.println(transactions);
-                                }
-                            }
-
-                            break;
-
-                        case "R":
-                         //   if (){
-
-                          //  }
-                            break;
-
-                    }
+                    ledgerMenu();
                     break;
 
 
                 case "X":
-                    System.out.println("Exit");
+                    System.out.println("Exit ");
                     break;
 
                 default:
@@ -161,8 +59,67 @@ public class PennyTrackApplication {
                     break;
             }
         }
+        while (!option.equals("X \n"));
     }
 
+    public static void ledgerMenu() {
+
+        System.out.println("Selection: Ledger");
+
+        System.out.println(""" 
+                A) All
+                
+                D) Deposits
+                
+                P) Payments
+                
+                R) Reports
+                
+                H) Main Menu
+                
+                Please enter choice :
+                """);
+
+        String ledgerOption = input.nextLine().trim().toUpperCase();
+
+        switch (ledgerOption) {
+            case "A":
+                for (Transaction transaction : transactionsList)
+                    transaction.display();
+                break;
+
+            case "D":
+                for (Transaction transaction : transactionsList) {
+                    if (transaction.getAmount() > 0) {
+                        transaction.display();
+                    }
+                }
+                break;
+
+
+            case "P":
+                for (Transaction transaction : transactionsList) {
+                    if (transaction.getAmount() < 0) {
+                        transaction.display();
+                    }
+                }
+
+                break;
+
+
+            case "R":
+
+                break;
+
+            case "H":
+                System.out.println(" Returning to Main Menu.");
+                mainMenu();
+                break;
+
+        }
+
+
+    }
     public static ArrayList<Transaction> loadFile() {
         ArrayList<Transaction> transactionArrayList = new ArrayList<>();
         try {
@@ -176,7 +133,7 @@ public class PennyTrackApplication {
             //This allows me to skip th header/first line so everything compiles correctly
 
             while (line != null) {
-                System.out.println(line);
+                //System.out.println(line);
 
                 String[] parts = line.split(Pattern.quote("|"));
                 ///creates parts[0],parts[1],parts[2],parts[3],parts[4]
@@ -185,6 +142,7 @@ public class PennyTrackApplication {
 
                 Transaction transaction = new Transaction(parts[0], parts[1], parts[2], parts[3], amount);
 
+                //System.out.println(parts[0]+ parts[1]+ parts[2]+ parts[3]+ amount);
                 transactionArrayList.add(transaction);
 
 
@@ -196,10 +154,75 @@ public class PennyTrackApplication {
             System.out.println("Problem reading file.");
         }
 
-        System.out.println(transactionArrayList.size());
+        //System.out.println(transactionArrayList.size());
 
         return transactionArrayList;
 
+    }
+
+    public static void addDeposit() {
+
+        System.out.println("Selection: Add deposit");
+
+        System.out.println("Please enter the following: ");
+
+        System.out.println("Description: ");
+        String description = input.nextLine();
+
+        System.out.println("Vendor: ");
+        String vendor = input.nextLine();
+
+        System.out.println("Amount: ");
+        String amount = input.nextLine();
+
+        double cost = Double.parseDouble(amount);
+        cost = Math.abs(cost);
+
+        LocalDateTime now = LocalDateTime.now();
+
+        //converts local date and time into a string type
+        String date = now.toLocalDate().toString();
+        String time = now.toLocalTime().toString();
+
+        //Now we have to create the Transaction (created new object)
+        Transaction transaction = new Transaction(date, time, description, vendor, cost);
+
+        //Now we have to store the new object this stores in memory
+        transactionsList.add(transaction);
+
+        //this saves and writes it to the csv file
+        saveTransaction(transaction);
+
+    }
+    public static void addPayment() {
+        System.out.println("Selection: Make Payment (Debit) ");
+
+        System.out.println("Please enter the following: ");
+
+        System.out.println("Description: ");
+        String debitDescription = input.nextLine();
+
+        System.out.println("Vendor: ");
+        String debitVendor = input.nextLine();
+
+        System.out.println("Amount: ");
+        String debitAmount = input.nextLine();
+        double debitCost = Double.parseDouble(debitAmount);
+        debitCost = -Math.abs(debitCost);
+
+        LocalDateTime debitNow = LocalDateTime.now();
+
+        //converts local date and time into a string type
+        String debitDate = debitNow.toLocalDate().toString();
+        String debitTime = debitNow.toLocalTime().toString();
+
+        //Now we have to create the Transaction (created new object)
+        Transaction debitTransaction = new Transaction(debitDate, debitTime, debitDescription, debitVendor, debitCost);
+
+        //Now we have to store the new object
+        transactionsList.add(debitTransaction);
+
+        saveTransaction(debitTransaction);
     }
 
     public static void saveTransaction(Transaction addedTransaction) {
@@ -218,4 +241,38 @@ public class PennyTrackApplication {
     }
 }
 
-
+///public static void displayTransaction() { unused display method that can display transactions as well.
+///
+///         try {
+///             FileReader fileReader = new FileReader("src/main/resources/transactions.csv");
+///             BufferedReader bufferedReader = new BufferedReader(fileReader);
+///
+///             String line = bufferedReader.readLine();
+///             // System.out.println(line); (checkpoint)
+///
+///             line = bufferedReader.readLine();
+///             //This allows me to skip th header/first line so everything compiles correctly
+///
+///             while (line != null) {
+///                 System.out.println(line);
+///
+///                 String[] parts = line.split(Pattern.quote("|"));
+///                 ///creates parts[0],parts[1],parts[2],parts[3],parts[4]
+///
+///                 double amount = Double.parseDouble(parts[4]);
+///
+///                 //Transaction transaction = new Transaction(parts[0], parts[1], parts[2], parts[3], amount);
+///
+///                 System.out.println(parts[0] + parts[1] + parts[2] + parts[3] + amount);
+///                 //transactionArrayList.add(transaction);
+///
+///
+///                 line = bufferedReader.readLine();
+///
+///             }
+///
+///         } catch (IOException e) {
+///             System.out.println("Problem reading file.");
+///         }
+///
+///     }

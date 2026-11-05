@@ -45,5 +45,12 @@ public class Transaction {
     public double getAmount(){
         return amount;
     }
+    public void display(){
+        String depositTransactions = date + "|" + time + "|" + description + "|" + vendorName + "|" + amount;
+        System.out.println(depositTransactions);
+
+
+    }
+
 
 }
