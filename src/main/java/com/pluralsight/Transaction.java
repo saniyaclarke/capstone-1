@@ -1,11 +1,15 @@
 package com.pluralsight;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 public class Transaction {
     private String date;
     private String time;
     private String description;
     private String vendorName;
     private double amount;
+
 
     public Transaction(String date, String time, String description, String vendorName, double amount) {
         this.date = date;
@@ -15,42 +19,57 @@ public class Transaction {
         this.amount = amount;
 
     }
-    public void setDate(String date){
+
+    public void setDate(String date) {
         this.date = date;
     }
-    public String getDate(){
+
+    public String getDate() {
         return date;
     }
-    public void setTime(String time){
+
+    public void setTime(String time) {
         this.time = time;
     }
-    public String getTime(){
+
+    public String getTime() {
         return time;
     }
-    public void setDescription(String description){
+
+    public void setDescription(String description) {
         this.description = description;
     }
-    public String getDescription(){
+
+    public String getDescription() {
         return description;
     }
-    public void setVendorName(String vendorName){
+
+    public void setVendorName(String vendorName) {
         this.vendorName = vendorName;
     }
-    public String getVendorName(){
+
+    public String getVendorName() {
         return vendorName;
     }
-    public void setAmount(double amount){
+
+    public void setAmount(double amount) {
         this.amount = amount;
     }
-    public double getAmount(){
+
+    public double getAmount() {
         return amount;
     }
-    public void display(){
+
+    public void display() {
         String depositTransactions = date + "|" + time + "|" + description + "|" + vendorName + "|" + amount;
         System.out.println(depositTransactions);
 
 
     }
 
+    }
 
-}
+
+
+
+
