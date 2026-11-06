@@ -63,6 +63,7 @@ public class PennyTrackApplication {
     }
 
     public static void ledgerMenu() {
+        String ledgerOption;
 
         System.out.println("Selection: Ledger");
 
@@ -80,14 +81,17 @@ public class PennyTrackApplication {
                 Please enter choice :
                 """);
 
-        String ledgerOption = input.nextLine().trim().toUpperCase();
+        ledgerOption = input.nextLine().trim().toUpperCase();
 
         switch (ledgerOption) {
+
+            //displays all transactions by calling display method
             case "A":
                 for (Transaction transaction : transactionsList)
                     transaction.display();
                 break;
 
+            //displays debit transaction by calling display method
             case "D":
                 for (Transaction transaction : transactionsList) {
                     if (transaction.getAmount() > 0) {
@@ -96,7 +100,7 @@ public class PennyTrackApplication {
                 }
                 break;
 
-
+            //displays payment transactions by calling display method
             case "P":
                 for (Transaction transaction : transactionsList) {
                     if (transaction.getAmount() < 0) {
@@ -108,8 +112,80 @@ public class PennyTrackApplication {
 
 
             case "R":
+                // subMenu();
+
+                String reportSelection;
+
+                System.out.println("Selection: Reports");
+                System.out.println("""
+                          1) Month To Date
+                          2) Previous Month
+                          3) Year To Date
+                          4) Previous Year
+                          5) Search by Vendor - prompt the user for the vendor name and
+                             display all entries for that vendor
+                          0) Back - go back to the Ledger page
+                        """);
+
+                reportSelection = input.nextLine();
+
+                switch (reportSelection) {
+
+                    case "1" :
+                        System.out.println("Selection: Month To Date ");
+                        break;
+
+                    case "2" :
+                        System.out.println("Selection: Previous Month ");
+                        break;
+
+                    case "3" :
+                        System.out.println("Selection: Year To Date ");
+                        break;
+
+                    case "4" :
+                        System.out.println("Selection: Previous Year ");
+                        break;
+
+                    case "5" :
+                        System.out.println("Selection:  ");
+                        break;
+
+                    case "0" :
+                        System.out.println("Selection: Back ");
+                        break;
+
+
+                }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                 break;
+
 
             case "H":
                 System.out.println(" Returning to Main Menu.");
@@ -120,6 +196,7 @@ public class PennyTrackApplication {
 
 
     }
+
     public static ArrayList<Transaction> loadFile() {
         ArrayList<Transaction> transactionArrayList = new ArrayList<>();
         try {
@@ -194,6 +271,7 @@ public class PennyTrackApplication {
         saveTransaction(transaction);
 
     }
+
     public static void addPayment() {
         System.out.println("Selection: Make Payment (Debit) ");
 
@@ -241,7 +319,7 @@ public class PennyTrackApplication {
     }
 }
 
-///public static void displayTransaction() { unused display method that can display transactions as well.
+/// public static void displayTransaction() { unused display method that can display transactions as well.
 ///
 ///         try {
 ///             FileReader fileReader = new FileReader("src/main/resources/transactions.csv");
