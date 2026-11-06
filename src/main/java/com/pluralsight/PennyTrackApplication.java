@@ -15,6 +15,7 @@ public class PennyTrackApplication {
     public static void main(String[] args) {
 
         mainMenu();
+        sortTransactions();
 
     }
 
