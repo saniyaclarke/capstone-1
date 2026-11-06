@@ -143,13 +143,12 @@ public class PennyTrackApplication {
                         break;
 
                     case "2":
-                        System.out.println("Selection: Previous Month ");
-
+                        runPreviousMonth();
                         //RunPreviousMonth()
                         break;
 
                     case "3":
-                        System.out.println("Selection: Year To Date ");
+                        RunYearToDate();
                         //RunYearToDate()
                         break;
 
@@ -209,24 +208,74 @@ public class PennyTrackApplication {
     public static void runPreviousMonth() {
         System.out.println("\nSelection: Previous Month ");
 
+            //Need current date to compare to transaction date
+            LocalDate runDate = LocalDate.now();
+            //stores value of previous month in a LocalDate variable previousMonth
+            LocalDate previousMonth = runDate.minusMonths(1);
+            //run date, then set value -1 month, change day of month to 1 stores in startDate
+            LocalDate startDate = previousMonth.withDayOfMonth(1);
+            //run date, then set value -1 month, change day of month to length of said month stores in startDate
+            LocalDate endDate = previousMonth.withDayOfMonth(previousMonth.lengthOfMonth());
+
+                                                             // int monthValue = reportDateLocal.getMonthValue(); - can do it with ints as well (figure out)
+                                                             //int previousMonthValue = monthValue.
+
         for (Transaction transaction : transactionsList) {
 
-            //conversion
+            //conversion (transaction date)
             String reportDate = transaction.getDate();
             LocalDate reportDateLocal = LocalDate.parse(reportDate);
 
-            int monthValue = reportDateLocal.getMonthValue();
+            if (!reportDateLocal.isAfter(startDate) && !reportDateLocal.isBefore(endDate)){
+                transaction.display();
+
+            }
         }
+
 
     }
     public static void RunYearToDate() {
+        LocalDate runDate = LocalDate.now();
+
+        //Sets day to Jan 1(1st day of year)
+        LocalDate startDate = runDate.withDayOfYear(1);
+
+        for ( Transaction transaction : transactionsList){
+
+            String reportDate = transaction.getDate();
+            LocalDate reportDateLocal = LocalDate.parse(reportDate);
+
+            if (!reportDateLocal.isBefore(startDate) && !reportDateLocal.isAfter(runDate)){
+                transaction.display();
+
+            }
+        }
+
 
 }
     public static void RunPreviousYear() {
+        LocalDate runDate = LocalDate.now();
 
+        LocalDate previousYear = runDate.minusYears(1);
+
+        LocalDate startDate = previousYear.withDayOfYear(1);
+
+        LocalDate endDate = previousYear.withDayOfYear(previousYear.lengthOfYear());
+
+        for (Transaction transaction : transactionsList)
+        {
+            String reportYear = transaction.getDate();
+            LocalDate reportYearLocal = LocalDate.parse(reportYear);
+
+            if (!reportYearLocal.isBefore(startDate) && (!reportYearLocal.isAfter(endDate))){
+                transaction.display();
+
+            }
+
+        }
 }
 
-            public static void SearchbyVendor() {
+    public static void SearchbyVendor() {
 }
 
     public static ArrayList<Transaction> loadFile() {
